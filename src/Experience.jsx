@@ -8,13 +8,9 @@ export default function Experience() {
 
             <OrbitControls makeDefault />
 
-            <mesh scale={1.5}>
-                <boxGeometry />
-                <meshNormalMaterial />
-            </mesh>
-
             <Text3D font="./fonts/helvetiker_regular.typeface.json">
                 Hello R3F
+                <meshNormalMaterial />
             </Text3D>
         </>
     );
