@@ -35,6 +35,26 @@ export default function Experience() {
                     <meshMatcapMaterial matcap={matcapTexture} />
                 </Text3D>
             </Center>
+
+            {[...Array(100)].map((_, i) => (
+                <mesh
+                    key={i}
+                    position={[
+                        (Math.random() - 0.5) * 10,
+                        (Math.random() - 0.5) * 10,
+                        (Math.random() - 0.5) * 10,
+                    ]}
+                    scale={0.2 + Math.random() * 0.2}
+                    rotation={[
+                        Math.random() * Math.PI,
+                        Math.random() * Math.PI,
+                        0,
+                    ]}
+                >
+                    <torusGeometry />
+                    <meshMatcapMaterial matcap={matcapTexture} />
+                </mesh>
+            ))}
         </>
     );
 }
