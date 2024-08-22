@@ -13,7 +13,8 @@ const torusGeometry = new THREE.TorusGeometry(1, 0.6, 16, 32);
 const material = new THREE.MeshMatcapMaterial();
 
 export default function Experience() {
-    const donutGroupRef = useRef(null);
+    const donuts = useRef([]);
+    // const donutGroupRef = useRef(null);
     // const [torusGeometry, setTorusGeometry] = useState();
     // const [material, setMaterial] = useState();
 
@@ -33,7 +34,12 @@ export default function Experience() {
 
     useFrame((state, delta) => {
         // delta = time between the frames, changes based on framerate
-        for (const donut of donutGroupRef.current.children) {
+        /*
+            for (const donut of donutGroupRef.current.children) {
+                donut.rotation.y += delta * 0.1;
+            }
+        */
+        for (const donut of donuts.current) {
             donut.rotation.y += delta * 0.1;
         }
     });
@@ -66,26 +72,25 @@ export default function Experience() {
                 </Text3D>
             </Center>
 
-            <group ref={donutGroupRef}>
-                {[...Array(100)].map((_, i) => (
-                    <mesh
-                        key={i}
-                        geometry={torusGeometry}
-                        material={material}
-                        position={[
-                            (Math.random() - 0.5) * 10,
-                            (Math.random() - 0.5) * 10,
-                            (Math.random() - 0.5) * 10,
-                        ]}
-                        scale={0.2 + Math.random() * 0.2}
-                        rotation={[
-                            Math.random() * Math.PI,
-                            Math.random() * Math.PI,
-                            0,
-                        ]}
-                    />
-                ))}
-            </group>
+            {[...Array(100)].map((_, i) => (
+                <mesh
+                    key={i}
+                    ref={(donut) => (donuts.current[i] = donut)} // the donut is implicitly passed to the callback in the ref prop, so we can fill the empty initial array with 100 donuts
+                    geometry={torusGeometry}
+                    material={material}
+                    position={[
+                        (Math.random() - 0.5) * 10,
+                        (Math.random() - 0.5) * 10,
+                        (Math.random() - 0.5) * 10,
+                    ]}
+                    scale={0.2 + Math.random() * 0.2}
+                    rotation={[
+                        Math.random() * Math.PI,
+                        Math.random() * Math.PI,
+                        0,
+                    ]}
+                />
+            ))}
         </>
     );
 }
