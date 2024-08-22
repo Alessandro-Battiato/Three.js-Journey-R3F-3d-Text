@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
     useMatcapTexture,
     Center,
@@ -7,11 +7,13 @@ import {
 } from "@react-three/drei";
 import { Perf } from "r3f-perf";
 import * as THREE from "three";
+import { useFrame } from "@react-three/fiber";
 
 const torusGeometry = new THREE.TorusGeometry(1, 0.6, 16, 32);
 const material = new THREE.MeshMatcapMaterial();
 
 export default function Experience() {
+    const donutGroupRef = useRef(null);
     // const [torusGeometry, setTorusGeometry] = useState();
     // const [material, setMaterial] = useState();
 
@@ -28,6 +30,13 @@ export default function Experience() {
         material.matcap = matcapTexture;
         material.needsUpdate = true; // This way Three.js knows it needs to update the shader using the matcap material, and it's needed cause Three.js tries to avoid updating shaders as much as possible
     }, []);
+
+    useFrame((state, delta) => {
+        // delta = time between the frames, changes based on framerate
+        for (const donut of donutGroupRef.current.children) {
+            donut.rotation.y += delta * 0.1;
+        }
+    });
 
     return (
         <>
@@ -56,24 +65,27 @@ export default function Experience() {
                     Hello R3F
                 </Text3D>
             </Center>
-            {[...Array(100)].map((_, i) => (
-                <mesh
-                    key={i}
-                    geometry={torusGeometry}
-                    material={material}
-                    position={[
-                        (Math.random() - 0.5) * 10,
-                        (Math.random() - 0.5) * 10,
-                        (Math.random() - 0.5) * 10,
-                    ]}
-                    scale={0.2 + Math.random() * 0.2}
-                    rotation={[
-                        Math.random() * Math.PI,
-                        Math.random() * Math.PI,
-                        0,
-                    ]}
-                />
-            ))}
+
+            <group ref={donutGroupRef}>
+                {[...Array(100)].map((_, i) => (
+                    <mesh
+                        key={i}
+                        geometry={torusGeometry}
+                        material={material}
+                        position={[
+                            (Math.random() - 0.5) * 10,
+                            (Math.random() - 0.5) * 10,
+                            (Math.random() - 0.5) * 10,
+                        ]}
+                        scale={0.2 + Math.random() * 0.2}
+                        rotation={[
+                            Math.random() * Math.PI,
+                            Math.random() * Math.PI,
+                            0,
+                        ]}
+                    />
+                ))}
+            </group>
         </>
     );
 }
