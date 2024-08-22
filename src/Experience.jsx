@@ -1,4 +1,4 @@
-import { OrbitControls } from "@react-three/drei";
+import { Text3D, OrbitControls } from "@react-three/drei";
 import { Perf } from "r3f-perf";
 
 export default function Experience() {
@@ -12,6 +12,10 @@ export default function Experience() {
                 <boxGeometry />
                 <meshNormalMaterial />
             </mesh>
+
+            <Text3D font="./fonts/helvetiker_regular.typeface.json">
+                Hello R3F
+            </Text3D>
         </>
     );
 }
