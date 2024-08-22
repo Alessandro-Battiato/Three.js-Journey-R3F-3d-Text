@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     useMatcapTexture,
     Center,
@@ -6,10 +6,14 @@ import {
     OrbitControls,
 } from "@react-three/drei";
 import { Perf } from "r3f-perf";
+import * as THREE from "three";
+
+const torusGeometry = new THREE.TorusGeometry(1, 0.6, 16, 32);
+const material = new THREE.MeshMatcapMaterial();
 
 export default function Experience() {
-    const [torusGeometry, setTorusGeometry] = useState();
-    const [material, setMaterial] = useState();
+    // const [torusGeometry, setTorusGeometry] = useState();
+    // const [material, setMaterial] = useState();
 
     // DISCLAIMER: it's not encouraged to use the matcaps in production projects as you're relying on a repo which could remove certain matcaps at anytime
     const [matcapTexture] = useMatcapTexture(
@@ -17,14 +21,24 @@ export default function Experience() {
         256
     ); // the second parameter is the width
 
+    useEffect(() => {
+        matcapTexture.colorSpace = THREE.SRGBColorSpace;
+        matcapTexture.needsUpdate = true;
+
+        material.matcap = matcapTexture;
+        material.needsUpdate = true; // This way Three.js knows it needs to update the shader using the matcap material, and it's needed cause Three.js tries to avoid updating shaders as much as possible
+    }, []);
+
     return (
         <>
             <Perf position="top-left" />
             <OrbitControls makeDefault />
 
             {/*Even though this looks weird, sending a function, in this case the set state, as a ref of a JSX element, will make React call that function and thus we are saving the element inside the torus geometry state*/}
-            <torusGeometry ref={setTorusGeometry} />
-            <meshMatcapMaterial ref={setMaterial} matcap={matcapTexture} />
+            {/*
+                <torusGeometry ref={setTorusGeometry} />
+                <meshMatcapMaterial ref={setMaterial} matcap={matcapTexture} />
+            */}
 
             <Center>
                 <Text3D
